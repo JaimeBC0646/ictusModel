@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediccion de Ictus</title>
+    <script>
+        function clasificarInsecto(event) {
+            event.preventDefault();
+            const age = document.getElementById('age').value;
+            const bmi = document.getElementById('bmi').value;
+            const avg_glucose_level = document.getElementById('avg_glucose_level').value;
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `age=${age}&bmi=${bmi}&avg_glucose_level=${avg_glucose_level}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('resultado').innerText = 'Error: ' + data.error;
+                } else {
+                    document.getElementById('resultado').innerText = 'La prediccion dicta ' + data.categoria;
+                }
+            })
+            .catch(error => {
+                document.getElementById('resultado').innerText = 'Error en la solicitud.';
+                console.error('Error:', error);
+            });
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('age').value = '';
+            document.getElementById('bmi').value = '';
+            document.getElementById('avg_glucose_level').value = '';
+            document.getElementById('resultado').innerText = '';
+        }
+    </script>
+</head>
+<body>
+    <h1>Prediccion de Ictus</h1>
+    <form id="formulario" onsubmit="clasificarInsecto(event)">
+        <label for="age">Edad:</label>
+        <input type="number" id="age" name="age"><br><br>
+        <label for="bmi">IMC (aproximado):</label>
+        <input type="text" id="bmi" name="bmi"><br><br>
+        <label for="avg_glucose_level">Nivel de glucosa:</label>
+        <input type="text" id="avg_glucose_level" name="avg_glucose_level"><br><br>
+        <input type="submit" value="Enviar">
+    </form>
+    <button onclick="limpiarFormulario()">Limpiar</button>
+    <p id="resultado"></p>
+</body>
+</html>
