@@ -1,19 +1,65 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
+    <title>Prediccion de Ictus</title>
+    <script>
+        function clasificarIctus(event) {
+            event.preventDefault();
+            const hypertension = document.getElementById('hypertension').value;
+            const heart_disease = document.getElementById('heart_disease').value;
+            const gender_Female = document.getElementById('gender_Female').value;
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `hypertension=${hypertension}&heart_disease=${heart_disease}&gender_Female=${gender_Female}`,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('resultado').innerText = 'Error: ' + data.error;
+                } else {
+                    document.getElementById('resultado').innerText = 'La prediccion dicta ' + data.categoria;
+                }
+            })
+            .catch(error => {
+                document.getElementById('resultado').innerText = 'Error en la solicitud.';
+                console.error('Error:', error);
+            });
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('formulario').reset();
+            document.getElementById('resultado').innerText = '';
+        }
+    </script>
 </head>
 <body>
-    <h3>Jaime Bautsita Cardona, 20210646   9B - TI</h3>
-    <img src="{{ url_for('custom_static', filename='jimmy.jpg') }}" alt="JimmyImg">
-
-    
-    <form action="/submit" method="post">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br><br>
-        <input type="submit" value="Submit">
+    <h1>Prediccion de Ictus</h1>
+    <form id="formulario" onsubmit="clasificarIctus(event)">
+        <label for="hypertension">Padece hipertension?:</label>
+        <label>SI:</label>
+        <input type="radio" id="hypertension" name="hypertension" value="1">
+        <label>NO:</label>
+        <input type="radio" id="hypertension" name="hypertension" value="0">
+        <br>
+        <label for="heart_disease">Padece del corazon:</label>
+        <label>SI:</label>
+        <input type="radio" id="heart_disease" name="heart_disease" value="1">
+        <label>NO:</label>
+        <input type="radio" id="heart_disease" name="heart_disease" value="0">
+        <br>
+        <label for="gender_Female">Genero:</label>
+        <label>HOMBRE:</label>
+        <input type="radio" id="gender_Female" name="gender_Female" value="0">
+        <label>MUJER:</label>
+        <input type="radio" id="gender_Female" name="gender_Female" value="1">
+        <br>
+        <input type="submit" value="Enviar">
     </form>
+    <button onclick="limpiarFormulario()">Limpiar</button>
+    <p id="resultado"></p>
 </body>
 </html>

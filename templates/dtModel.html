@@ -3,7 +3,7 @@
 <head>
     <title>Prediccion de Ictus</title>
     <script>
-        function clasificarInsecto(event) {
+        function clasificarIctus(event) {
             event.preventDefault();
             const age = document.getElementById('age').value;
             const bmi = document.getElementById('bmi').value;
@@ -40,10 +40,10 @@
 </head>
 <body>
     <h1>Prediccion de Ictus</h1>
-    <form id="formulario" onsubmit="clasificarInsecto(event)">
+    <form id="formulario" onsubmit="clasificarIctus(event)">
         <label for="age">Edad:</label>
         <input type="number" id="age" name="age"><br><br>
-        <label for="bmi">IMC (aproximado):</label>
+        <label for="bmi">IMC:</label>
         <input type="text" id="bmi" name="bmi"><br><br>
         <label for="avg_glucose_level">Nivel de glucosa:</label>
         <input type="text" id="avg_glucose_level" name="avg_glucose_level"><br><br>
